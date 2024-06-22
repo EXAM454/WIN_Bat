@@ -1,0 +1,42 @@
+name: .NET Build and Test
+
+# Controls when the workflow will run
+on:
+  push:
+    branches:
+      - main  # Triggers on push to main branch
+  pull_request:
+    branches:
+      - main  # Triggers on pull request to main branch
+
+jobs:
+  build:
+    # The type of runner that the job will run on
+    runs-on: windows-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '3.1.x'  # Specifies the .NET SDK version
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build the project
+      run: dotnet build --configuration Release
+
+    - name: Test the project
+      run: dotnet test --no-build --verbosity normal
+
+    - name: Publish Build Artifacts
+      if: success()
+      uses: actions/upload-artifact@v3
+      with:
+        name: build-output
+        path: |
+          **/bin/Release/netcoreapp3.1/publish/
