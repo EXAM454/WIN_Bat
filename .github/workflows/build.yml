@@ -11,30 +11,28 @@ on:
 
 jobs:
   build:
-    # The type of runner that the job will run on
-    runs-on: windows-latest
+    runs-on: ubuntu-latest  # Switch to Ubuntu environment
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v2  # Checks out the repository code
 
     - name: Setup .NET
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v3  # Sets up the .NET SDK
       with:
-        dotnet-version: '3.1.x'  # Specifies the .NET SDK version
+        dotnet-version: '3.1.x'  # Adjust the .NET version if needed
 
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore  # Restores dependencies
 
     - name: Build the project
-      run: dotnet build --configuration Release
+      run: dotnet build --configuration Release  # Builds the project
 
-    - name: Test the project
-      run: dotnet test --no-build --verbosity normal
+    - name: Run unit tests
+      run: dotnet test --no-build --verbosity normal  # Runs tests without rebuilding
 
     - name: Publish Build Artifacts
-      if: success()
+      if: success()  # Only publish if the previous steps succeeded
       uses: actions/upload-artifact@v3
       with:
         name: build-output
